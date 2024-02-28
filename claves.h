@@ -1,4 +1,4 @@
-int init();
+int init_q();
 int set_value(int key, char *value1, int N_value2, double *V_value2);
 int get_value(int key, char *value1, int *N_value2, double *V_value2);
 int modify_value(int key, char *value1, int N_value2, double V_value2);

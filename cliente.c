@@ -5,6 +5,7 @@
 #include "claves.h"
 
 int main() {
-	init();
+	int a = init_q();
+	printf("%d\n", a);
 	return 0;
 }

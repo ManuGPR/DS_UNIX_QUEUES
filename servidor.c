@@ -5,6 +5,16 @@
 
 int init_server() {
 	printf("Init hecho\n");
+	struct mq_attr attr;
+	attr.mq_msgsize = sizeof(struct Respuesta);
+	attr.mq_maxmsg = 1;
+	
+	struct Respuesta r;
+	r.res = 0;
+	
+	mqd_t q_client = mq_open("/CLIENTE", O_WRONLY, 0700, &attr); 
+	mq_send(q_client, (char*)&r, sizeof(r), 0);
+	mq_close(q_client);
 	return 0;
 }
 
