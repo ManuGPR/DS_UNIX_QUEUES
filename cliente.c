@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <mqueue.h>
+#include <string.h>
+#include "mensajes.h"
+#include "claves.h"
 
 int main() {
-	printf("Hello world\n");
+	init();
 	return 0;
 }
