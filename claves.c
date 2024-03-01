@@ -6,10 +6,14 @@
 #include "mensajes.h"
 #include "claves.h"
 
-int init_q() {
+int init() {
+	//Función init que manda el mensaje de init al servidor
+	
+	// Se inicializan las colas
 	mqd_t q_server, q_client;
 	size_t cero = 0;
 	
+	// Se inicializan los
 	struct mq_attr attr;
 	attr.mq_msgsize = sizeof(struct Peticion);
 	attr.mq_maxmsg = 10;
