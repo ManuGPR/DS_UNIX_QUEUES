@@ -29,7 +29,27 @@ int init_server(struct Peticion p) {
 }
 
 int set_value_server(struct Peticion p) {
-	return 1;
+    // Se crea los atributos de la cola
+    struct mq_attr attr;
+    attr.mq_msgsize = sizeof(struct Respuesta);
+    attr.mq_maxmsg = 1;
+
+    // Se crea la estructura de respuesta
+    struct Respuesta r;
+    memset(&r, sizeof(r), cero);
+
+    printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
+
+    // Se crea la cola de respuesta al cliente
+    mqd_t q_client = mq_open(p.q_clientname, O_WRONLY, 0700, &attr);
+
+    // Se envía el mensaje
+    mq_send(q_client, (char*)&r, sizeof(r), 0);
+
+    // Se cierra la cola
+    mq_close(q_client);
+    printf("Set value hecho\n");
+    return 0;
 }
 
 int get_value_server(struct Peticion p) {
