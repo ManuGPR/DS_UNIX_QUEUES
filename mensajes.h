@@ -5,7 +5,7 @@ struct Peticion {
 	int N_value2;
 	double V_value2[32];
 	int key;
-	int q_res;
+	char q_clientname[16];
 };
 
 struct Respuesta {

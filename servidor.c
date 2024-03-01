@@ -6,7 +6,7 @@
 
 const int cero = 0;
 
-int init_server() {
+int init_server(struct Peticion p) {
 	// Se crea los atributos de la cola
 	struct mq_attr attr;
 	attr.mq_msgsize = sizeof(struct Respuesta);
@@ -17,7 +17,7 @@ int init_server() {
 	memset(&r, sizeof(r), cero);
 	
 	// Se crea la cola de respuesta al cliente
-	mqd_t q_client = mq_open("/CLIENTE", O_WRONLY, 0700, &attr);
+	mqd_t q_client = mq_open(p.q_clientname, O_WRONLY, 0700, &attr);
 	
 	// Se envía el mensaje 
 	mq_send(q_client, (char*)&r, sizeof(r), 0);
@@ -64,24 +64,30 @@ int main() {
 		perror("");
 		return -1;
 	}
-	
 	// Bucle de espera a las peticiones
 	ssize_t b_read;
 	while(1) {
 		b_read = mq_receive(q_server, (char *)&p, sizeof(p), NULL);
+		printf("1\n");
 		if (b_read == -1) {
 			perror("");
 			return -1;
 		}
-		
+
 		// Llamada a las funciones
 		switch(p.op) {
-			case 0: init_server();
+			case 0: init_server(p);
+				break;
 			case 1: set_value_server(p);
+				break;
 			case 2: get_value_server(p);
+				break;
 			case 3: modify_value_server(p);
+				break;
 			case 4: delete_key_server(p);
+				break;
 			case 5: exist_server(p);
+				break;
 		}
 		
 	}
