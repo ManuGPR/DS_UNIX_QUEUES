@@ -54,7 +54,7 @@ int init_server(struct Peticion p) {
 		}
 	}
 	
-	// Se envía el mensaje 
+	// Se envía el mensaje al cliente
 	mq_send(q_client, (char*)&r, sizeof(r), 0);
 	
 	// Se cierra la cola
