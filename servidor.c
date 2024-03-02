@@ -17,7 +17,7 @@ char *abs_path;
 int init_server(struct Peticion p) {
 	// Se crea la estructura de respuesta
 	struct Respuesta r;
-	memset(&r, sizeof(r), cero);
+	memset(&r, cero, cero);
 	r.res = 0;
 	
 	// Se crea la cola de respuesta al cliente
@@ -66,21 +66,13 @@ int init_server(struct Peticion p) {
 int set_value_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
-    memset(&r, sizeof(r), cero);
-	r.res = 0;
+    memset(&r, cero, sizeof(r));
+    r.res = 0;
 	
 	// Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
 	
     //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
-	if (p.N_value2 > 32 || p.N_value2 < 1) {
-		printf("N no válido\n");
-		r.res = -1;
-		mq_send(q_client, (char*)&r, sizeof(r), 0);
-		mq_close(q_client);
-		return -1;
-	}
-	
 	// Se obtiene el nombre absoluto del fichero
 	char *tuple_name = calloc(PATH_MAX, sizeof(char));
 	strcpy(tuple_name, abs_path);
@@ -97,7 +89,7 @@ int set_value_server(struct Peticion p) {
 		mq_close(q_client);
 		return -1;
 	}
-
+	
 	// Crea el fichero
 	FILE * tuple;
 	tuple = fopen(tuple_name, "w+");
@@ -115,9 +107,7 @@ int set_value_server(struct Peticion p) {
 	if (fprintf(tuple, "%d\n", p.N_value2) < 0) {r.res = -1;}
 	for (int i = 0; i < p.N_value2; i++) {
 		if (fprintf(tuple, "%lf", p.V_value2[i]) < 0) {r.res = -1;}
-		if (i < p.N_value2 -1) {
-			fprintf(tuple, ", ");
-		}
+		if (i < p.N_value2 -1) {fprintf(tuple, ", ");}
     }
      
     // Cierra la tupla
@@ -128,6 +118,7 @@ int set_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
+    
     //printf("Set value hecho\n");
     return 0;
 }
@@ -135,7 +126,7 @@ int set_value_server(struct Peticion p) {
 int get_value_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
-    memset(&r, sizeof(r), cero);
+    memset(&r, cero, sizeof(r));
 
     double v[2] = {1,2} ;
     strcpy(r.value1, "placeholder");
@@ -158,7 +149,7 @@ int get_value_server(struct Peticion p) {
 int modify_value_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
-    memset(&r, sizeof(r), cero);
+    memset(&r, cero, sizeof(r));
 
     //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
 
@@ -177,7 +168,7 @@ int modify_value_server(struct Peticion p) {
 int delete_key_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
-    memset(&r, sizeof(r), cero);
+    memset(&r, cero, sizeof(r));
 
     //printf("Key = %d\n", p.key);
 
@@ -196,7 +187,7 @@ int delete_key_server(struct Peticion p) {
 int exist_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
-    memset(&r, sizeof(r), cero);
+    memset(&r, cero, sizeof(r));
 
     //printf("Key = %d\n", p.key);
 
@@ -223,7 +214,7 @@ int main() {
 	// Se inicializan los valores de attr y e p
 	attr.mq_msgsize = sizeof(struct Peticion);
 	attr.mq_maxmsg = 10;
-	memset(&p, sizeof(p), cero);
+	memset(&p, cero, sizeof(p));
 	
 	// Se abre la cola del servidor y se comprueba que se abra bien
 	mqd_t q_server = mq_open("/SERVIDOR", O_CREAT | O_RDONLY, 0700, &attr);

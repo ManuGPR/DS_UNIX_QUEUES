@@ -28,7 +28,7 @@ int init() {
     //Se crean los mensajes de peticion y respuesta
 	struct Peticion p;
 	struct Respuesta r;
-	memset(&p, sizeof(p), cero);
+	memset(&p, cero, sizeof(p));
 	strcpy(p.q_clientname, q_clientname);
 	p.op = 0;
 
@@ -65,19 +65,24 @@ int set_value(int key, char *value1, int N_value2, double *V_value2){
     //Se crean los mensajes de peticion y respuesta
     struct Peticion p;
     struct Respuesta r;
-    memset(&p, sizeof(p), cero);
+    memset(&p, cero, sizeof(p));
     
     strcpy(p.q_clientname, q_clientname);
     p.op = 1;
     strcpy(p.value1, value1);
     p.key = key;
-    p.N_value2 = N_value2;
-    memcpy(p.V_value2,V_value2, N_value2 * sizeof(double));
-
-    //Se manda la peticion y se recibe la respuesta
-    mq_send(q_server, (char *)&p, sizeof(p), 0);
-    mq_receive(q_client, (char *)&r, sizeof(r), 0);
-
+    if (N_value2 < 32 && N_value2 > 1) {
+		p.N_value2 = N_value2;
+		memcpy(p.V_value2,V_value2, N_value2 * sizeof(double));
+		
+		//Se manda la peticion y se recibe la respuesta
+		mq_send(q_server, (char *)&p, sizeof(p), 0);
+		mq_receive(q_client, (char *)&r, sizeof(r), 0);
+    }
+    else {
+    	r.res = -1;
+	}
+    
     //Se cierran las colas
     mq_close(q_client);
     mq_close(q_server);
@@ -107,7 +112,7 @@ int get_value(int key, char *value1, int *N_value2, double *V_value2){
     //Se crean los mensajes de peticion y respuesta
     struct Peticion p;
     struct Respuesta r;
-    memset(&p, sizeof(p), cero);
+    memset(&p, cero, sizeof(p));
     strcpy(p.q_clientname, q_clientname);
     p.op = 2;
     p.key = key;
@@ -151,7 +156,7 @@ int modify_value(int key, char *value1, int N_value2, double *V_value2){
     //Se crean los mensajes de peticion y respuesta
     struct Peticion p;
     struct Respuesta r;
-    memset(&p, sizeof(p), cero);
+    memset(&p, cero, sizeof(p));
     strcpy(p.q_clientname, q_clientname);
     p.op = 3;
     strcpy(p.value1, value1);
@@ -192,7 +197,7 @@ int delete_key(int key){
     //Se crean los mensajes de peticion y respuesta
     struct Peticion p;
     struct Respuesta r;
-    memset(&p, sizeof(p), cero);
+    memset(&p, cero, sizeof(p));
     strcpy(p.q_clientname, q_clientname);
     p.op = 4;
     p.key = key;
@@ -229,7 +234,7 @@ int exist(int key){
     //Se crean los mensajes de peticion y respuesta
     struct Peticion p;
     struct Respuesta r;
-    memset(&p, sizeof(p), cero);
+    memset(&p, cero, sizeof(p));
     strcpy(p.q_clientname, q_clientname);
     p.op = 5;
     p.key = key;
@@ -244,5 +249,3 @@ int exist(int key){
     mq_unlink(q_clientname);
     return r.res;
 }
-
-

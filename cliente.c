@@ -3,10 +3,9 @@
 #include "claves.h"
 
 int main() {
-	/*int a = init();
+	int a = init();
 	printf("%d\n", a);
-	*/
-	int n = 30;
+	int n = 32;
     double vector[n];
    	for (int i = 0; i < n; i++) {vector[i] = (double)i;}
     int b = set_value(10, "pepito", n, vector);
