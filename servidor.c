@@ -2,17 +2,57 @@
 #include <mqueue.h>
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
+#include <dirent.h>
 #include "mensajes.h"
 
+#define PATH_MAX 4096
+
 const int cero = 0;
+const char *rel_path="./tuplas";
+char *abs_path;
 
 int init_server(struct Peticion p) {
 	// Se crea la estructura de respuesta
 	struct Respuesta r;
 	memset(&r, sizeof(r), cero);
+	r.res = 0;
 	
 	// Se crea la cola de respuesta al cliente
 	mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
+	
+	//Implementación de la función init
+	
+	// Declaración de variables necesarias para el init
+	DIR *dir = opendir(abs_path);
+	struct dirent* tuplas;
+	int rem;
+	char* file_name;
+	
+	// Mientras haya tuplas en el fichero de tuplas
+	while ((tuplas = readdir(dir)) != NULL) {
+		
+		// Si el objeto no es un directorio
+		if (strcmp(tuplas->d_name, ".") != 0 && strcmp(tuplas->d_name, "..") != 0) {
+			
+			// Se reserva espacio para el nombre del fichero y se obtiene su path absoluto
+			file_name = calloc(PATH_MAX, sizeof(char));
+			strcpy(file_name, abs_path);
+			char barra[] = "/";
+			strcat(file_name, barra);
+			strcat(file_name, tuplas->d_name);
+			
+			// Se borra el fichero, si hay algún error, se escribe y la respuesta devolverá -1
+			rem = remove(file_name);	
+			if (rem == -1) {
+				perror("");
+				r.res = rem;
+			}
+			
+			// Se libera el espacio dinámico
+			free(file_name);
+		}
+	}
 	
 	// Se envía el mensaje 
 	mq_send(q_client, (char*)&r, sizeof(r), 0);
@@ -28,7 +68,7 @@ int set_value_server(struct Peticion p) {
     struct Respuesta r;
     memset(&r, sizeof(r), cero);
 
-    printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
+    //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
 
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
@@ -38,7 +78,7 @@ int set_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    printf("Set value hecho\n");
+    //printf("Set value hecho\n");
     return 0;
 }
 
@@ -61,7 +101,7 @@ int get_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    printf("Get value hecho\n");
+    //printf("Get value hecho\n");
     return 0;
 }
 
@@ -70,7 +110,7 @@ int modify_value_server(struct Peticion p) {
     struct Respuesta r;
     memset(&r, sizeof(r), cero);
 
-    printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
+    //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
 
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
@@ -80,7 +120,7 @@ int modify_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    printf("Modify value hecho\n");
+    //printf("Modify value hecho\n");
     return 0;
 }
 
@@ -89,7 +129,7 @@ int delete_key_server(struct Peticion p) {
     struct Respuesta r;
     memset(&r, sizeof(r), cero);
 
-    printf("Key = %d\n", p.key);
+    //printf("Key = %d\n", p.key);
 
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
@@ -99,7 +139,7 @@ int delete_key_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    printf("delete hecho\n");
+    //printf("delete hecho\n");
     return 0;
 }
 
@@ -108,7 +148,7 @@ int exist_server(struct Peticion p) {
     struct Respuesta r;
     memset(&r, sizeof(r), cero);
 
-    printf("Key = %d\n", p.key);
+    //printf("Key = %d\n", p.key);
 
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
@@ -118,7 +158,7 @@ int exist_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    printf("exist hecho\n");
+    //printf("exist hecho\n");
     return 0;
 }
 
@@ -127,6 +167,9 @@ int main() {
 	struct mq_attr attr;
 	struct Peticion p;
 	
+	// Se le da valor al path de las tuplas
+	abs_path = realpath(rel_path, NULL);
+
 	// Se inicializan los valores de attr y e p
 	attr.mq_msgsize = sizeof(struct Peticion);
 	attr.mq_maxmsg = 10;
@@ -142,7 +185,6 @@ int main() {
 	ssize_t b_read;
 	while(1) {
 		b_read = mq_receive(q_server, (char *)&p, sizeof(p), NULL);
-		printf("1\n");
 		if (b_read == -1) {
 			perror("");
 			return -1;

@@ -66,6 +66,7 @@ int set_value(int key, char *value1, int N_value2, double *V_value2){
     struct Peticion p;
     struct Respuesta r;
     memset(&p, sizeof(p), cero);
+    
     strcpy(p.q_clientname, q_clientname);
     p.op = 1;
     strcpy(p.value1, value1);
@@ -129,7 +130,7 @@ int get_value(int key, char *value1, int *N_value2, double *V_value2){
 }
 
 int modify_value(int key, char *value1, int N_value2, double *V_value2){
-    //Función set_value que manda el mensaje de modify_value al servidor
+    //Función modify_value que manda el mensaje de modify_value al servidor
     // Se inicializan las colas
     mqd_t q_server, q_client;
     size_t cero = 0;
@@ -170,7 +171,7 @@ int modify_value(int key, char *value1, int N_value2, double *V_value2){
 }
 
 int delete_key(int key){
-    //Función init que manda el mensaje de delete_key al servidor
+    //Función delete_key que manda el mensaje de delete_key al servidor
     // Se inicializan las colas
     mqd_t q_server, q_client;
     size_t cero = 0;
@@ -207,7 +208,7 @@ int delete_key(int key){
     return r.res;
 }
 int exist(int key){
-    //Función init que manda el mensaje de exist al servidor
+    //Función exist que manda el mensaje de exist al servidor
     // Se inicializan las colas
     mqd_t q_server, q_client;
     size_t cero = 0;
