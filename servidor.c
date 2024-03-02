@@ -4,12 +4,14 @@
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "mensajes.h"
 
 #define PATH_MAX 4096
 
 const int cero = 0;
 const char *rel_path="./tuplas";
+const char barra[] = "/";
 char *abs_path;
 
 int init_server(struct Peticion p) {
@@ -38,7 +40,6 @@ int init_server(struct Peticion p) {
 			// Se reserva espacio para el nombre del fichero y se obtiene su path absoluto
 			file_name = calloc(PATH_MAX, sizeof(char));
 			strcpy(file_name, abs_path);
-			char barra[] = "/";
 			strcat(file_name, barra);
 			strcat(file_name, tuplas->d_name);
 			
@@ -54,12 +55,11 @@ int init_server(struct Peticion p) {
 		}
 	}
 	
-	// Se envía el mensaje al cliente
+	// Se envía el mensaje 
 	mq_send(q_client, (char*)&r, sizeof(r), 0);
 	
 	// Se cierra la cola
 	mq_close(q_client);
-	printf("Init hecho\n");
 	return 0;
 }
 
@@ -67,12 +67,62 @@ int set_value_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, sizeof(r), cero);
-
-    //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
-
-    // Se crea la cola de respuesta al cliente
+	r.res = 0;
+	
+	// Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
+	
+    //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
+	if (p.N_value2 > 32 || p.N_value2 < 1) {
+		printf("N no válido\n");
+		r.res = -1;
+		mq_send(q_client, (char*)&r, sizeof(r), 0);
+		mq_close(q_client);
+		return -1;
+	}
+	
+	// Se obtiene el nombre absoluto del fichero
+	char *tuple_name = calloc(PATH_MAX, sizeof(char));
+	strcpy(tuple_name, abs_path);
+	strcat(tuple_name, barra);
+	char key_str[32];
+	sprintf(key_str, "%d", p.key);
+	strcat(tuple_name, key_str);
+	
+	// Se mira si existe
+	if (access(tuple_name, F_OK) == 0) {	
+		printf("Archivo existe\n");
+		r.res = -1;
+		mq_send(q_client, (char*)&r, sizeof(r), 0);
+		mq_close(q_client);
+		return -1;
+	}
 
+	// Crea el fichero
+	FILE * tuple;
+	tuple = fopen(tuple_name, "w+");
+	if (tuple == NULL) {
+		perror("");
+		r.res = -1;
+		mq_send(q_client, (char*)&r, sizeof(r), 0);
+		mq_close(q_client);
+		return -1;
+	}
+	
+	// Escribe los datos
+	if (fprintf(tuple, "%d\n", p.key) < 0) {r.res = -1;}
+	if (fprintf(tuple, "%s\n", p.value1) < 0) {r.res = -1;}
+	if (fprintf(tuple, "%d\n", p.N_value2) < 0) {r.res = -1;}
+	for (int i = 0; i < p.N_value2; i++) {
+		if (fprintf(tuple, "%lf", p.V_value2[i]) < 0) {r.res = -1;}
+		if (i < p.N_value2 -1) {
+			fprintf(tuple, ", ");
+		}
+    }
+     
+    // Cierra la tupla
+    fclose(tuple);
+    
     // Se envía el mensaje
     mq_send(q_client, (char*)&r, sizeof(r), 0);
 

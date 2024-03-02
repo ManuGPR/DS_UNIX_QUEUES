@@ -3,15 +3,15 @@
 #include "claves.h"
 
 int main() {
-	int a = init();
+	/*int a = init();
 	printf("%d\n", a);
-
-    /*double vector[2];
-    vector[0] = 1;
-    vector[1] = 2;
-    int b = set_value(1, "pepito", 2, vector);
+	*/
+	int n = 30;
+    double vector[n];
+   	for (int i = 0; i < n; i++) {vector[i] = (double)i;}
+    int b = set_value(10, "pepito", n, vector);
     printf("%d\n", b);
-    
+    /*
     int N;
     double v2[32];
     char v1[256];
