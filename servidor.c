@@ -127,15 +127,47 @@ int get_value_server(struct Peticion p) {
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));
-
-    double v[2] = {1,2} ;
-    strcpy(r.value1, "placeholder");
-    r.N_or_exists = 2;
-    memcpy(r.V_value2, v, r.N_or_exists* sizeof(double));
-    r.res = 0;
-
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
+    char *tuple_name = calloc(PATH_MAX, sizeof(char));
+    strcpy(tuple_name, abs_path);
+    strcat(tuple_name, barra);
+    char key_str[32];
+    sprintf(key_str, "%d", p.key);
+    strcat(tuple_name, key_str);
+
+    // Se mira si existe
+    if (access(tuple_name, F_OK) == -1) {
+        printf("Archivo no existe\n");
+        perror("");
+        r.res = -1;
+        mq_send(q_client, (char*)&r, sizeof(r), 0);
+        mq_close(q_client);
+        return -1;
+    }
+
+    //Abre el archivo
+    FILE * tuple;
+    tuple = fopen(tuple_name, "r");
+    if (tuple == NULL) {
+        perror("");
+        r.res = -1;
+        mq_send(q_client, (char*)&r, sizeof(r), 0);
+        mq_close(q_client);
+        return -1;
+    }
+    int key;
+
+    // Lee los datos
+    if (fscanf(tuple, "%d\n", &key) < 1) { printf("1\n"); r.res = -1;}
+    if (fscanf(tuple, "%s\n", r.value1) < 1) {printf("2\n");r.res = -1;}
+    if (fscanf(tuple, "%d\n", &r.N_or_exists) < 1) {printf("3\n");r.res = -1;}
+    for (int i = 0; i < r.N_or_exists; i++) {
+        if (fscanf(tuple, "%lf", &r.V_value2[i]) < 1) {printf("4\n");r.res = -1;}
+        if (i < r.N_or_exists -1) { fscanf(tuple, ", ");}
+    }
+    // Cierra la tupla
+    fclose(tuple);
 
     // Se envía el mensaje
     mq_send(q_client, (char*)&r, sizeof(r), 0);
@@ -156,6 +188,46 @@ int modify_value_server(struct Peticion p) {
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
 
+    // Se obtiene el nombre absoluto del fichero
+    char *tuple_name = calloc(PATH_MAX, sizeof(char));
+    strcpy(tuple_name, abs_path);
+    strcat(tuple_name, barra);
+    char key_str[32];
+    sprintf(key_str, "%d", p.key);
+    strcat(tuple_name, key_str);
+
+    // Se mira si existe
+    if (access(tuple_name, F_OK) == -1) {
+        printf("Archivo no existe\n");
+        r.res = -1;
+        mq_send(q_client, (char*)&r, sizeof(r), 0);
+        mq_close(q_client);
+        return -1;
+    }
+
+    // Crea el fichero
+    FILE * tuple;
+    tuple = fopen(tuple_name, "w+");
+    if (tuple == NULL) {
+        perror("");
+        r.res = -1;
+        mq_send(q_client, (char*)&r, sizeof(r), 0);
+        mq_close(q_client);
+        return -1;
+    }
+
+    // Escribe los datos
+    if (fprintf(tuple, "%d\n", p.key) < 0) {r.res = -1;}
+    if (fprintf(tuple, "%s\n", p.value1) < 0) {r.res = -1;}
+    if (fprintf(tuple, "%d\n", p.N_value2) < 0) {r.res = -1;}
+    for (int i = 0; i < p.N_value2; i++) {
+        if (fprintf(tuple, "%lf", p.V_value2[i]) < 0) {r.res = -1;}
+        if (i < p.N_value2 -1) {fprintf(tuple, ", ");}
+    }
+
+    // Cierra la tupla
+    fclose(tuple);
+
     // Se envía el mensaje
     mq_send(q_client, (char*)&r, sizeof(r), 0);
 
@@ -175,6 +247,41 @@ int delete_key_server(struct Peticion p) {
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
 
+    char key_str[32];
+    sprintf(key_str, "%d", p.key);
+    // Declaración de variables necesarias para el init
+    DIR *dir = opendir(abs_path);
+    struct dirent* tuplas;
+    int rem;
+    char* file_name;
+    int found = 0;
+    // Mientras haya tuplas en el fichero de tuplas
+    while ((tuplas = readdir(dir)) != NULL) {
+
+        // Si el objeto no es un directorio
+        if (strcmp(tuplas->d_name, key_str) == 0) {
+            found = 1;
+            // Se reserva espacio para el nombre del fichero y se obtiene su path absoluto
+            file_name = calloc(PATH_MAX, sizeof(char));
+            strcpy(file_name, abs_path);
+            strcat(file_name, barra);
+            strcat(file_name, tuplas->d_name);
+
+            // Se borra el fichero, si hay algún error, se escribe y la respuesta devolverá -1
+            rem = remove(file_name);
+            if (rem == -1) {
+                perror("");
+                r.res = rem;
+            }
+
+            // Se libera el espacio dinámico
+            free(file_name);
+        }
+    }
+    if (found == 0){
+        r.res = -1;
+    }
+
     // Se envía el mensaje
     mq_send(q_client, (char*)&r, sizeof(r), 0);
 
@@ -193,6 +300,19 @@ int exist_server(struct Peticion p) {
 
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
+
+
+    char *tuple_name = calloc(PATH_MAX, sizeof(char));
+    strcpy(tuple_name, abs_path);
+    strcat(tuple_name, barra);
+    char key_str[32];
+    sprintf(key_str, "%d", p.key);
+    strcat(tuple_name, key_str);
+
+    // Se mira si existe
+    if (access(tuple_name, F_OK) == -1) {
+        r.res = -1;
+    }
 
     // Se envía el mensaje
     mq_send(q_client, (char*)&r, sizeof(r), 0);

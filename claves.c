@@ -71,7 +71,7 @@ int set_value(int key, char *value1, int N_value2, double *V_value2){
     p.op = 1;
     strcpy(p.value1, value1);
     p.key = key;
-    if (N_value2 < 32 && N_value2 > 1) {
+    if (N_value2 <= 32 && N_value2 >= 1) {
 		p.N_value2 = N_value2;
 		memcpy(p.V_value2,V_value2, N_value2 * sizeof(double));
 		
@@ -123,7 +123,6 @@ int get_value(int key, char *value1, int *N_value2, double *V_value2){
 
     //printf(" value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", r.value1, r.N_or_exists, r.V_value2[0], r.V_value2[1]);
     strcpy(value1 , r.value1);
-
     *N_value2 = r.N_or_exists;
     memcpy(V_value2, r.V_value2, r.N_or_exists * sizeof(double));
 
@@ -164,9 +163,17 @@ int modify_value(int key, char *value1, int N_value2, double *V_value2){
     p.N_value2 = N_value2;
     memcpy(p.V_value2,V_value2, N_value2 * sizeof(double));
 
-    //Se manda la peticion y se recibe la respuesta
-    mq_send(q_server, (char *)&p, sizeof(p), 0);
-    mq_receive(q_client, (char *)&r, sizeof(r), 0);
+    if (N_value2 <= 32 && N_value2 >= 1) {
+        p.N_value2 = N_value2;
+        memcpy(p.V_value2,V_value2, N_value2 * sizeof(double));
+
+        //Se manda la peticion y se recibe la respuesta
+        mq_send(q_server, (char *)&p, sizeof(p), 0);
+        mq_receive(q_client, (char *)&r, sizeof(r), 0);
+    }
+    else {
+        r.res = -1;
+    }
 
     //Se cierran las colas
     mq_close(q_client);
