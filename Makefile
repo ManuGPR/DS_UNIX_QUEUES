@@ -11,8 +11,11 @@ clean:
 	rm -f $(BIN_FILES) *.o
 	rm -f *.so
 
-cliente: cliente.c libclaves.so
+cliente: cliente.c libclaves.so tuplas
 	$(CC) $(CFLAGS) $(QFLAGS) cliente.c -L. -lclaves -o $@
+
+tuplas:
+	mkdir tuplas
 
 servidor: servidor.c
 	$(CC) $(CFLAGS) $(QFLAGS) $^ -o $@ 
