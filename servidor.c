@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "mensajes.h"
 
 #define PATH_MAX 4096
@@ -14,7 +15,19 @@ const char *rel_path="./tuplas";
 const char barra[] = "/";
 char *abs_path;
 
-int init_server(struct Peticion p) {
+pthread_mutex_t mutex;
+pthread_cond_t copiado;
+int copia = 0;
+
+int init_server(struct Peticion * peticion) {
+	// Copia de la peticion
+	pthread_mutex_lock(&mutex);
+	struct Peticion p;
+	memcpy(&p, peticion, sizeof(struct Peticion));
+	pthread_cond_signal(&copiado);
+	copia = 1;
+	pthread_mutex_unlock(&mutex);
+	
 	// Se crea la estructura de respuesta
 	struct Respuesta r;
 	memset(&r, cero, cero);
@@ -57,13 +70,19 @@ int init_server(struct Peticion p) {
 	
 	// Se envía el mensaje 
 	mq_send(q_client, (char*)&r, sizeof(r), 0);
-	
 	// Se cierra la cola
 	mq_close(q_client);
-	return 0;
+	pthread_exit(NULL);
 }
 
-int set_value_server(struct Peticion p) {
+int set_value_server(struct Peticion * peticion) {
+	// Copia de la peticion
+	pthread_mutex_lock(&mutex);
+	struct Peticion p;
+	memcpy(&p, peticion, sizeof(struct Peticion));
+	copia = 1;
+	pthread_cond_signal(&copiado);
+	pthread_mutex_unlock(&mutex);
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));
@@ -87,7 +106,7 @@ int set_value_server(struct Peticion p) {
 		r.res = -1;
 		mq_send(q_client, (char*)&r, sizeof(r), 0);
 		mq_close(q_client);
-		return -1;
+		pthread_exit(NULL);
 	}
 	
 	// Crea el fichero
@@ -98,7 +117,7 @@ int set_value_server(struct Peticion p) {
 		r.res = -1;
 		mq_send(q_client, (char*)&r, sizeof(r), 0);
 		mq_close(q_client);
-		return -1;
+		pthread_exit(NULL);
 	}
 	
 	// Escribe los datos
@@ -118,12 +137,18 @@ int set_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    
-    //printf("Set value hecho\n");
-    return 0;
+    pthread_exit(NULL);
 }
 
-int get_value_server(struct Peticion p) {
+int get_value_server(struct Peticion * peticion) {
+	// Copia de la peticion
+	pthread_mutex_lock(&mutex);
+	struct Peticion p;
+	memcpy(&p, peticion, sizeof(struct Peticion));
+	copia = 1;
+	pthread_cond_signal(&copiado);
+	pthread_mutex_unlock(&mutex);
+	
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));
@@ -143,7 +168,7 @@ int get_value_server(struct Peticion p) {
         r.res = -1;
         mq_send(q_client, (char*)&r, sizeof(r), 0);
         mq_close(q_client);
-        return -1;
+        pthread_exit(NULL);
     }
 
     //Abre el archivo
@@ -154,7 +179,7 @@ int get_value_server(struct Peticion p) {
         r.res = -1;
         mq_send(q_client, (char*)&r, sizeof(r), 0);
         mq_close(q_client);
-        return -1;
+        pthread_exit(NULL);
     }
     int key;
 
@@ -174,16 +199,21 @@ int get_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    //printf("Get value hecho\n");
-    return 0;
+    pthread_exit(NULL);
 }
 
-int modify_value_server(struct Peticion p) {
+int modify_value_server(struct Peticion * peticion) {
+	// Copia de la peticion
+	pthread_mutex_lock(&mutex);
+	struct Peticion p;
+	memcpy(&p, peticion, sizeof(struct Peticion));
+	copia = 1;
+	pthread_cond_signal(&copiado);
+	pthread_mutex_unlock(&mutex);
+	
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));
-
-    //printf("Key = %d, value_1 = %s, n_value2 = %d, v_value2 = %lf %lf\n", p.key, p.value1, p.N_value2, p.V_value2[0], p.V_value2[1]);
 
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
@@ -202,7 +232,7 @@ int modify_value_server(struct Peticion p) {
         r.res = -1;
         mq_send(q_client, (char*)&r, sizeof(r), 0);
         mq_close(q_client);
-        return -1;
+        pthread_exit(NULL);
     }
 
     // Crea el fichero
@@ -213,7 +243,7 @@ int modify_value_server(struct Peticion p) {
         r.res = -1;
         mq_send(q_client, (char*)&r, sizeof(r), 0);
         mq_close(q_client);
-        return -1;
+        pthread_exit(NULL);
     }
 
     // Escribe los datos
@@ -233,28 +263,34 @@ int modify_value_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    //printf("Modify value hecho\n");
-    return 0;
+    pthread_exit(NULL);
 }
 
-int delete_key_server(struct Peticion p) {
+int delete_key_server(struct Peticion * peticion) {
+	// Copia de la peticion
+	pthread_mutex_lock(&mutex);
+	struct Peticion p;
+	memcpy(&p, peticion, sizeof(struct Peticion));
+	copia = 1;
+	pthread_cond_signal(&copiado);
+	pthread_mutex_unlock(&mutex);
+
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));
 
-    //printf("Key = %d\n", p.key);
-
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
-
+    
+    // Declaración de variables necesarias para el init
     char key_str[32];
     sprintf(key_str, "%d", p.key);
-    // Declaración de variables necesarias para el init
     DIR *dir = opendir(abs_path);
     struct dirent* tuplas;
     int rem;
     char* file_name;
     int found = 0;
+    
     // Mientras haya tuplas en el fichero de tuplas
     while ((tuplas = readdir(dir)) != NULL) {
 
@@ -287,21 +323,27 @@ int delete_key_server(struct Peticion p) {
 
     // Se cierra la cola
     mq_close(q_client);
-    //printf("delete hecho\n");
-    return 0;
+    pthread_exit(NULL);
 }
 
-int exist_server(struct Peticion p) {
+int exist_server(struct Peticion * peticion) {
+	// Copia de la peticion
+	pthread_mutex_lock(&mutex);
+	struct Peticion p;
+	memcpy(&p, peticion, sizeof(struct Peticion));
+	copia = 1;
+	pthread_cond_signal(&copiado);
+	pthread_mutex_unlock(&mutex);
+	
+
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));
 
-    //printf("Key = %d\n", p.key);
-
     // Se crea la cola de respuesta al cliente
     mqd_t q_client = mq_open(p.q_clientname, O_WRONLY);
 
-
+	// Datos para el fichero
     char *tuple_name = calloc(PATH_MAX, sizeof(char));
     strcpy(tuple_name, abs_path);
     strcat(tuple_name, barra);
@@ -315,15 +357,20 @@ int exist_server(struct Peticion p) {
     }
 
     // Se envía el mensaje
+    sleep(10);
     mq_send(q_client, (char*)&r, sizeof(r), 0);
 
     // Se cierra la cola
     mq_close(q_client);
-    //printf("exist hecho\n");
-    return 0;
+    pthread_exit(NULL);
 }
 
 int main() {
+	// Se crean los attr de los threads
+	pthread_attr_t attr_thr;
+	pthread_attr_init(&attr_thr);
+	pthread_attr_setdetachstate(&attr_thr, PTHREAD_CREATE_DETACHED);
+	
 	// Se crean los atributos y la estructura de petición
 	struct mq_attr attr;
 	struct Peticion p;
@@ -350,22 +397,30 @@ int main() {
 			perror("");
 			return -1;
 		}
-
+		pthread_t thread;
+		
 		// Llamada a las funciones
 		switch(p.op) {
-			case 0: init_server(p);
+			case 0: pthread_create(&thread, &attr_thr, (void*)init_server, (void*)&p);
 				break;
-			case 1: set_value_server(p);
+			case 1: pthread_create(&thread, &attr_thr, (void*)set_value_server, (void*)&p);
 				break;
-			case 2: get_value_server(p);
+			case 2: pthread_create(&thread, &attr_thr, (void*)get_value_server, (void*)&p);
 				break;
-			case 3: modify_value_server(p);
+			case 3: pthread_create(&thread, &attr_thr, (void*)modify_value_server, (void*)&p);
 				break;
-			case 4: delete_key_server(p);
+			case 4: pthread_create(&thread, &attr_thr, (void*)delete_key_server,(void*)&p);
 				break;
-			case 5: exist_server(p);
+			case 5: pthread_create(&thread, &attr_thr, (void*)exist_server, (void*)&p);
 				break;
 		}
+		
+		pthread_mutex_lock(&mutex);
+		while(copia == 0) {
+			pthread_cond_wait(&copiado, &mutex);
+		}
+		copia = 0;
+		pthread_mutex_unlock(&mutex);
 		
 	}
 	return 0;

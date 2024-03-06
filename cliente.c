@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "claves.h"
 
 int main() {
 	int a = init();
 	printf("%d\n", a);
+	
 	int n = 32;
     double vector[n];
    	for (int i = 0; i < n; i++) {vector[i] = (double)i;}

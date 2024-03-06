@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <mqueue.h>
 #include <string.h>
-//#include <sys/types.h>
 #include <unistd.h>
 #include "mensajes.h"
 #include "claves.h"
