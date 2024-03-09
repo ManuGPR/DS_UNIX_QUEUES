@@ -19,6 +19,7 @@ pthread_cond_t copiado;
 int copia = 0;
 
 void get_tuple_abs_path(char * tuple_name, int key) {
+	//Función auxiliar que obtiene el path absoluto de una tupla
 	strcpy(tuple_name, abs_path);
     strcat(tuple_name, "/");
     char key_str[32];
