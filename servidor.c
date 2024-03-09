@@ -9,10 +9,9 @@
 #include "mensajes.h"
 
 #define PATH_MAX 4096
+#define cero 0
 
-const int cero = 0;
 const char *rel_path="./tuplas";
-const char barra[] = "/";
 char *abs_path;
 
 pthread_mutex_t mutex;
@@ -21,14 +20,10 @@ int copia = 0;
 
 void get_tuple_abs_path(char * tuple_name, int key) {
 	strcpy(tuple_name, abs_path);
-    strcat(tuple_name, barra);
+    strcat(tuple_name, "/");
     char key_str[32];
     sprintf(key_str, "%d", key);
     strcat(tuple_name, key_str);
-}
-
-int find_tuple() {
-	return 0;
 }
 
 int init_server(struct Peticion * peticion) {
@@ -61,7 +56,7 @@ int init_server(struct Peticion * peticion) {
 			// Se reserva espacio para el nombre del fichero y se obtiene su path absoluto
 			file_name = calloc(PATH_MAX, sizeof(char));
 			strcpy(file_name, abs_path);
-			strcat(file_name, barra);
+			strcat(file_name, "/");
 			strcat(file_name, tuplas->d_name);
 			
 			// Se borra el fichero, si hay algún error, se escribe y la respuesta devolverá -1
@@ -298,7 +293,7 @@ int delete_key_server(struct Peticion * peticion) {
 			    // Se reserva espacio para el nombre del fichero y se obtiene su path absoluto
 			    file_name = calloc(PATH_MAX, sizeof(char));
 			    strcpy(file_name, abs_path);
-			    strcat(file_name, barra);
+			    strcat(file_name, "/");
 			    strcat(file_name, tuplas->d_name);
 
 			    // Se borra el fichero, si hay algún error, se escribe y la respuesta devolverá -1
