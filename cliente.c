@@ -2,44 +2,51 @@
 #include "claves.h"
 
 int main() {
-	int a = init();
-	printf("%d\n", a);
+	// Llamada a la función init
+	int res = init();
+	printf("Init devuelve %d\n", res);
 	
-	int n = 32;
-    double vector[n];
-   	for (int i = 0; i < n; i++) {vector[i] = (double)i;}
-    int b = set_value(10, "pepito", n, vector);
-    printf("%d\n", b);
+	// Llamada a la función set_value
+	int N_value2 = 32;
+    double V_value2[N_value2];
+   	for (int i = 0; i < N_value2; i++) {V_value2[i] = (double)i;}
+    res = set_value(10, "prueba de cadena", N_value2, V_value2);
+    printf("Set_value devuelve %d\n", res);
 
+	// Llamada a la función get_value
+    int N_value2_res;
+    double V_value2_res[32];
+    char Value1_res[256];
 
-    int N;
-    double v2[32];
-    char v1[256];
-
-    int c = get_value(10, v1, &N , v2);
-    printf("%d\n", c);
-    printf("%s\n", v1);
-    printf("%i\n", N);
-    for(int i = 0; i < N; i++){
-        printf("%lf\n", v2[i]);
+    res = get_value(10, Value1_res, &N_value2_res , V_value2_res);
+    printf("Get_value devuelve %d\n", res);
+    printf("Value1 = %s\n", Value1_res);
+    printf("N_value2 = %i\n", N_value2_res);
+    printf("V_value2:\n");
+    for(int i = 0; i < N_value2_res; i++){ 
+    	printf("%lf",V_value2_res[i]);
+    	if (i < N_value2_res -1) printf(", ");
+    	else printf("\n");
     }
 
+	// Llamada a la función modify value
+    int new_n = 16;
+    double vector_modify[new_n];
+    for (int i = 0; i < new_n; i++) {vector_modify[i] = i+i;}
+    res = modify_value(10, "prueba de nueva cadena", new_n, vector_modify);
+    printf("Modify value devuelve %d\n", res);
 
-    double vector3[2];
-    vector3[0] = 1;
-    vector3[1] = 2;
-    int d= modify_value(10, "manu:(", 2, vector3);
-    printf("%d\n", d);
+    // Llamada a la función exist 1
+    int key = 10;
+    res = exist(key);
+    printf("Exist 1 devuelve %d\n", res);
+    
+	// Llamada a la función delete_key
+    res = delete_key(key);
+    printf("Delete_key devuelve %d\n", res);
 
-    int k = 10;
-    int e = delete_key(k);
-    printf("%d\n", e);
-
-
-    set_value(10, "pepito", n, vector);
-
-    int g = 10;
-    int f = exist(g);
-    printf("%d\n", f);
+	// Llamada a la función exist 2
+	res = exist(key);
+    printf("Exist 2 devuelve %d\n", res);
 	return 0;
 }

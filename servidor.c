@@ -182,7 +182,7 @@ int get_value_server(struct Peticion * peticion) {
     // Lee los datos
     int key;
     if (fscanf(tuple, "%d\n", &key) < 1) { printf("1\n"); r.res = -1;}
-    if (fscanf(tuple, "%s\n", r.value1) < 1) {printf("2\n");r.res = -1;}
+    if (fscanf(tuple, "%[^\n]s\n", r.value1) < 1) {printf("2\n");r.res = -1;}
     if (fscanf(tuple, "%d\n", &r.N_or_exists) < 1) {printf("3\n");r.res = -1;}
     for (int i = 0; i < r.N_or_exists; i++) {
         if (fscanf(tuple, "%lf", &r.V_value2[i]) < 1) {printf("4\n");r.res = -1;}

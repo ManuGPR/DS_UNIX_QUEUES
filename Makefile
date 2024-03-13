@@ -14,7 +14,7 @@ clean:
 cliente: cliente.c libclaves.so tuplas
 	$(CC) $(CFLAGS) $(QFLAGS) cliente.c -L. -lclaves -o $@
 
-test/test%: test/test%.c libclaves.so tuplas
+test/%: test/%.c libclaves.so tuplas
 	$(CC) $(CFLAGS) $(QFLAGS) $< -L. -lclaves -o $@
 
 tuplas:
