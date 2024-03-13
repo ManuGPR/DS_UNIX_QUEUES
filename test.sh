@@ -1,9 +1,8 @@
 #!/bin/bash
-make
 
-./test_init
-./test_set_value
-./test_get_value
-./test_modify_value
-./test_delete_key
-./test_exits
+./test/test_init
+./test/test_set_value
+./test/test_get_value
+./test/test_modify_value
+./test/test_delete_key
+./test/test_exits

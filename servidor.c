@@ -188,7 +188,10 @@ int get_value_server(struct Peticion * peticion) {
         if (fscanf(tuple, "%lf", &r.V_value2[i]) < 1) {printf("4\n");r.res = -1;}
         if (i < r.N_or_exists -1) { fscanf(tuple, ", ");}
     }
-    
+	if (r.N_or_exists < 1 || r.N_or_exists > 32){
+		r.res = -1;
+	}
+  	
     // Cierra la tupla
     fclose(tuple);
 
