@@ -52,7 +52,7 @@ int leer_fichero(char *abs_path, int k){
 }
 
 int main() {
-    int c;
+    int set;
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";
     char *abs_path;
@@ -68,11 +68,11 @@ int main() {
     double vector[n];
     int k = 1;
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_1", n, vector);
-    printf("Prueba 1: %d\n", c);
+    set = set_value(k, "prueba_1", n, vector);
+    printf("Prueba 1: %d\n", set);
     print_files(abs_path);
 
-    if (c == 0){
+    if (set == 0){
         leer_fichero(abs_path, k);
     }
 
@@ -83,10 +83,10 @@ int main() {
     k = 1;
     n = 1;
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_2", n, vector);
-    printf("Prueba 2: %d\n", c);
+    set = set_value(k, "prueba_2", n, vector);
+    printf("Prueba 2: %d\n", set);
     print_files(abs_path);
-    if (c == 0){
+    if (set == 0){
         leer_fichero(abs_path, k);
     }
 
@@ -98,10 +98,10 @@ int main() {
     n = 0;
     k = 3;
     for (int i = 0; i <= n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_3", n, vector);
-    printf("Prueba 3 (N=0): %d\n", c);
+    set = set_value(k, "prueba_3", n, vector);
+    printf("Prueba 3 (N=0): %d\n", set);
     print_files(abs_path);
-    if (c == 0){
+    if (set == 0){
         leer_fichero(abs_path, k);
     }
 
@@ -111,10 +111,10 @@ int main() {
     n = 2;
     k = 4;
     for (int i = 0; i <= n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_4", n, vector);
-    printf("Prueba 4 (N=2): %d\n", c);
+    set = set_value(k, "prueba_4", n, vector);
+    printf("Prueba 4 (N=2): %d\n", set);
     print_files(abs_path);
-    if (c == 0){
+    if (set == 0){
         leer_fichero(abs_path, k);
     }
 
@@ -125,10 +125,10 @@ int main() {
     n = 31;
     k = 5;
     for (int i = 0; i <= n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_5", n, vector);
-    printf("Prueba 5 (N=31): %d\n", c);
+    set = set_value(k, "prueba_5", n, vector);
+    printf("Prueba 5 (N=31): %d\n", set);
     print_files(abs_path);
-     if (c == 0){
+     if (set == 0){
         leer_fichero(abs_path, k);
     }
      */
@@ -141,10 +141,10 @@ int main() {
     n = 32;
     k = 6;
     for (int i = 0; i <= n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_6", n, vector);
-    printf("Prueba 6 (N=32): %d\n", c);
+    set = set_value(k, "prueba_6", n, vector);
+    printf("Prueba 6 (N=32): %d\n", set);
     print_files(abs_path);
-     if (c == 0){
+     if (set == 0){
         leer_fichero(abs_path, k);
     }
     */
@@ -156,10 +156,10 @@ int main() {
     n = 33;
     k = 7;
     for (int i = 0; i <= n; i++) { vector[i] = (double) i; }
-    c = set_value(k, "prueba_7", n, vector);
-    printf("Prueba 7 (N=33): %d\n", c);
+    set = set_value(k, "prueba_7", n, vector);
+    printf("Prueba 7 (N=33): %d\n", set);
     print_files(abs_path);
-     if (c == 0){
+     if (set == 0){
         leer_fichero(abs_path, k);
     }
      */
@@ -173,10 +173,10 @@ int main() {
     for (int i = 0; i <= n; i++) { vector[i] = (double) i; }
     char cadena[300];
     for (int i = 0; i <= 20; i++){ strcat(cadena, "prueba_8");}
-    c = set_value(k, cadena, n, vector);
-    printf("Prueba 8 (len(cadena) >255): %d\n", c);
+    set = set_value(k, cadena, n, vector);
+    printf("Prueba 8 (len(cadena) >255): %d\n", set);
     print_files(abs_path);
-    if (c == 0){
+    if (set == 0){
         leer_fichero(abs_path, k);
     }
 

@@ -52,7 +52,6 @@ int leer_fichero(char *abs_path, int k){
 }
 
 int main(){
-
     printf("Test de get_value\n\n");
     //Declaración de variables
     int N;
@@ -104,6 +103,7 @@ int main(){
     printf("Resultado prueba e: %d\n", get);
 
     printf("\nTest 3: N > 32 \n");
+    //Crear un fichero a mano de N = 33
     printf("\nTest 4: len(value1) > 255\n");
 
 }

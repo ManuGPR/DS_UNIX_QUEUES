@@ -23,13 +23,15 @@ int main() {
     char *abs_path;
     abs_path = realpath(rel_path, NULL);
 
+    int in;
+
     /*Test 1: No hay ningun archivo en la carpeta test */
 
     printf("Test 1: No hay ningun archivo en la carpeta\n");
 
     //Se borran los archivos y comprueba si los a borrado
-    int a = init();
-    printf("Resualtado: %d\n", a);
+    in = init();
+    printf("Resualtado: %d\n", in);
     print_files(abs_path);
 
 
@@ -41,13 +43,13 @@ int main() {
     double vector[n];
     for (int i = 0; i < n; i++) {vector[i] = (double)i;}
     set_value(10, "pepito", n, vector);
-    //printf(" %d\n", b);
+
 
     print_files(abs_path);
 
     //Borrado con algún arhivo en la carpeta test
-    int c = init();
-    printf("Resultado: %d\n", c);
+    in = init();
+    printf("Resultado: %d\n", in);
     print_files(abs_path);
     return 0;
 
