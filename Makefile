@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-g -Wall
 QFLAGS=-lrt
-BIN_FILES= servidor cliente test_init test_set_value test_get_value test_modify_value test_delete_key test_exist
+BIN_FILES= servidor cliente test/test_init test/test_set_value test/test_get_value test/test_modify_value test/test_delete_key test/test_exist
 
 .PHONY: all clean 
 
@@ -14,26 +14,11 @@ clean:
 cliente: cliente.c libclaves.so tuplas
 	$(CC) $(CFLAGS) $(QFLAGS) cliente.c -L. -lclaves -o $@
 
-test_init:test/test_init.c libclaves.so tuplas
-	$(CC) $(CFLAGS) $(QFLAGS) test/test_init.c -L. -lclaves -o $@
-
-test_set_value:test/test_set_value.c libclaves.so tuplas
-	$(CC) $(CFLAGS) $(QFLAGS) test/test_set_value.c -L. -lclaves -o $@
-
-test_get_value:test/test_get_value.c libclaves.so tuplas
-	$(CC) $(CFLAGS) $(QFLAGS) test/test_get_value.c -L. -lclaves -o $@
-
-test_modify_value:test/test_modify_value.c libclaves.so tuplas
-	$(CC) $(CFLAGS) $(QFLAGS) test/test_modify_value.c -L. -lclaves -o $@
-
-test_delete_key:test/test_delete_key.c libclaves.so tuplas
-	$(CC) $(CFLAGS) $(QFLAGS) test/test_delete_key.c -L. -lclaves -o $@
-
-test_exist:test/test_exist.c libclaves.so tuplas
-	$(CC) $(CFLAGS) $(QFLAGS) test/test_exist.c -L. -lclaves -o $@
+test/test%: test/test%.c libclaves.so tuplas
+	$(CC) $(CFLAGS) $(QFLAGS) $< -L. -lclaves -o $@
 
 tuplas:
-	mkdir tuplas
+	mkdir -p tuplas
 
 servidor: servidor.c
 	$(CC) $(CFLAGS) $(QFLAGS) $^ -o $@ 
