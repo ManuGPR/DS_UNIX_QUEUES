@@ -74,9 +74,7 @@ int main(){
 
     /*Test 1: funcionamiento corecto*/
     printf("Test 1: todo correcto\n");
-    //k = 1;
 
-    //printf("En el directorio tuplas hay los siguientes archivos: ");
     print_files(abs_path);
     printf("Los datos que hay en el archivo creado: \n");
     leer_fichero(abs_path, k);
@@ -100,7 +98,7 @@ int main(){
     init();
 
     get = get_value(k, v1, &N , v2);
-    printf("Resultado prueba es: %d\n", get);
+    printf("Resultado prueba 2: %d\n", get);
 
     printf("\nTest 3: N > 32 \n");
     //Crear un fichero a mano de N = 33

@@ -53,12 +53,6 @@ int leer_fichero(char *abs_path, int k){
 }
 
 int main(){
-
-    printf("\n=========Test de modify_value=========\n");
-    //Declaración de variables
-
-
-
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";
     char *abs_path;
@@ -73,11 +67,10 @@ int main(){
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set_value(k, "archivo", n, vector);
 
+    printf("\n=========Test de modify_value=========\n");
     /*Test 1: funcionamiento corecto*/
     printf("Test 1: todo correcto\n");
-    //k = 1;
 
-    //printf("En el directorio tuplas hay los siguientes archivos: ");
     print_files(abs_path);
     printf("Los datos que ha en el archivo creado: \n");
     leer_fichero(abs_path, k);
@@ -95,7 +88,6 @@ int main(){
 
     /*Test 2: no hay ningun archivo*/
     printf("\nTest 2: no existe ninguna clave\n");
-
     //Se borran los archivos
     init();
     print_files(abs_path);
@@ -112,7 +104,6 @@ int main(){
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set_value(k, "archivo", n, vector);
-
     printf("Los datos que ha en el archivo creado: \n");
     leer_fichero(abs_path, k);
 	free(vector);
@@ -122,7 +113,10 @@ int main(){
     modify = modify_value(k, "archivo_cambiado", n , vector);
     printf("Resultado prueba 3: %d\n", modify);
 	free(vector);
+    printf("Los datos del archivo: \n");
+    leer_fichero(abs_path, k);
 
+    /*Test4: Modifica el archivo*/
     printf("\nTest 4: N = 32\n");
     //Se modifica el archivo
     n = 32;

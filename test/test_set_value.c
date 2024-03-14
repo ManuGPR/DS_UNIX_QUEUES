@@ -53,7 +53,6 @@ int leer_fichero(char *abs_path, int k){
 
 int main() {
     int set;
-    //Se obtiene el path del diretorio tuplas donde están almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";
     char *abs_path = calloc(4096, sizeof(char));
     abs_path = realpath(rel_path, NULL);
@@ -79,6 +78,7 @@ int main() {
     n = 1;
     k = 1;
     vector = calloc(n, sizeof(double));
+
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_2", n, vector);
     printf("Prueba 2: %d\n", set);
@@ -88,11 +88,11 @@ int main() {
 
     /*Test 3: N = 0*/
     printf("\nTest 3: N=0\n");
-
-    print_files(abs_path);
     n = 0;
     k = 3;
+    print_files(abs_path);
     vector = calloc(n, sizeof(double));
+
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_3", n, vector);
     printf("Prueba 3 (N=0): %d\n", set);
@@ -102,8 +102,8 @@ int main() {
 	
     /*Test 4: N = 2 */
     printf("\nTest 4: N=2\n");
-    print_files(abs_path);
     n = 2;
+    print_files(abs_path);
     k = 4;
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
@@ -154,13 +154,13 @@ int main() {
 
     /*Test 8: len(cadena) > 255 */
     printf("\nTest 8: len(cadena) > 255 \n");
-    print_files(abs_path);
     n = 1;
     k = 8;
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     char cadena[300];
     for (int i = 0; i < 50; i++){ strcat(cadena, "prueba");}
+
     set = set_value(k, cadena, n, vector);
     printf("Prueba 8 (len(cadena) >255): %d\n", set);
     print_files(abs_path);

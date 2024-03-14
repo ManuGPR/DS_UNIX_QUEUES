@@ -18,11 +18,11 @@ int print_files(char *abs_path){
 }
 
 int main() {
+
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";
     char *abs_path;
     abs_path = realpath(rel_path, NULL);
-
     int in;
 
 	printf("=========Test de init=========\n");
@@ -32,27 +32,26 @@ int main() {
 
     //Se borran los archivos y comprueba si los a borrado
     in = init();
-    printf("Resualtado: %d\n", in);
-    print_files(abs_path);
+    //printf("hola\n");
+    printf("Resultado: %d\n", in);
+    if (in == 0 ){print_files(abs_path);}
 
 
     /*Test 2: borra  todos los arhivos de la carpeta test sabiendo que exite uno */
-    printf("\n");
-    printf("Test 2: Existe algun archivo en la carpeta\n");
+    printf("\nTest 2: Existe algun archivo en la carpeta\n");
     //Se crea un fichero
     int n = 32;
     double vector[n];
     for (int i = 0; i < n; i++) {vector[i] = (double)i;}
-    set_value(10, "prueba", n, vector);
-
-
+    set_value(10, "prueba_2", n, vector);
+    //Imprime los archivos del fichero
     print_files(abs_path);
 
-    //Borrado con algún arhivo en la carpeta test
+    //Borrado con algún archivo en la carpeta test
     in = init();
     printf("Resultado: %d\n", in);
     print_files(abs_path);
-    printf("\n");
+
     return 0;
 
 }
