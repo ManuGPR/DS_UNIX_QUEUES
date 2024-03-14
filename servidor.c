@@ -87,7 +87,7 @@ int set_value_server(struct Peticion * peticion) {
 	copia = 1;
 	pthread_cond_signal(&copiado);
 	pthread_mutex_unlock(&mutex);
-	
+
     // Se crea la estructura de respuesta
     struct Respuesta r;
     memset(&r, cero, sizeof(r));

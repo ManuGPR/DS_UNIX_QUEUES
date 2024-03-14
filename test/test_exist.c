@@ -19,7 +19,7 @@ int print_files(char *abs_path) {
 
 
 int main(){
-    printf("Test de delete_key\n\n");
+    printf("\n=========Test de exist=========\n");
 
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";

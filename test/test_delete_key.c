@@ -19,7 +19,7 @@ int print_files(char *abs_path) {
 
 
 int main(){
-    printf("Test de delete_key\n\n");
+    printf("\n=========Test de delete_key=========\n");
 
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";
@@ -45,7 +45,7 @@ int main(){
     printf("Resultado prueba 1: %d\n", delete);
 +   print_files(abs_path);
 
-    printf("\nTest 2: no exite ninguna clave\n");
+    printf("\nTest 2: no existe ninguna clave\n");
     //Se borran los archivos
     delete = delete_key(k);
     printf("Resultado prueba 2: %d\n", delete);

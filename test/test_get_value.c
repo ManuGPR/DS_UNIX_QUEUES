@@ -52,7 +52,7 @@ int leer_fichero(char *abs_path, int k){
 }
 
 int main(){
-    printf("Test de get_value\n\n");
+    printf("\n=========Test de get_value=========\n");
     //Declaración de variables
     int N;
     double v2[32];
@@ -78,7 +78,7 @@ int main(){
 
     //printf("En el directorio tuplas hay los siguientes archivos: ");
     print_files(abs_path);
-    printf("Los datos que ha en el archivo creado: \n");
+    printf("Los datos que hay en el archivo creado: \n");
     leer_fichero(abs_path, k);
 
     //Se obtine el resultado
@@ -94,16 +94,15 @@ int main(){
         printf("%lf\n", v2[i]);
     }
 
-    printf("\nTest 2: no exite ninguna clave\n");
+    printf("\nTest 2: no existe ninguna clave\n");
 
     //Se borran los archivos
     init();
 
     get = get_value(k, v1, &N , v2);
-    printf("Resultado prueba e: %d\n", get);
+    printf("Resultado prueba es: %d\n", get);
 
     printf("\nTest 3: N > 32 \n");
     //Crear un fichero a mano de N = 33
     printf("\nTest 4: len(value1) > 255\n");
-
 }

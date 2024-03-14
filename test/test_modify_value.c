@@ -54,7 +54,7 @@ int leer_fichero(char *abs_path, int k){
 
 int main(){
 
-    printf("Test de modify_value\n\n");
+    printf("\n=========Test de modify_value=========\n");
     //Declaración de variables
 
 
@@ -68,8 +68,8 @@ int main(){
     init();
     int  modify;
     int n = 1;
-    double vector[n];
     int k = 1;
+    double *vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set_value(k, "archivo", n, vector);
 
@@ -91,44 +91,45 @@ int main(){
     print_files(abs_path);
     printf("Los datos que ha en el archivo modificado: \n");
     leer_fichero(abs_path, k);
-
+	free(vector);
 
     /*Test 2: no hay ningun archivo*/
-    printf("\nTest 2: no exite ninguna clave\n");
+    printf("\nTest 2: no existe ninguna clave\n");
 
     //Se borran los archivos
     init();
     print_files(abs_path);
+    vector = calloc(n, sizeof(double));
     modify = modify_value(k, "archivo_cambiado", n , vector);
     printf("Resultado prueba 2: %d\n", modify);
-
-
+	free(vector);
 
     /*Test 3: se modifica el archivo y N = 0 */
     printf("\nTest 3: N = 0 \n");
-
     //Se borran todos lor archivos y se crea un archivo
     init();
     n = 1;
+    vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set_value(k, "archivo", n, vector);
 
     printf("Los datos que ha en el archivo creado: \n");
     leer_fichero(abs_path, k);
-
+	free(vector);
     //Se modifica el archivo
     n = 0;
-    for (int i = 0; i < n; i++) { vector[i] = (double) i; }
+    vector = calloc(n, sizeof(double));
     modify = modify_value(k, "archivo_cambiado", n , vector);
     printf("Resultado prueba 3: %d\n", modify);
-
+	free(vector);
 
     printf("\nTest 4: N = 32\n");
     //Se modifica el archivo
     n = 32;
-    for (int i = 0; i < n; i++) { vector[i] = (double) i; }
+    vector = calloc(n, sizeof(double));
+    for (int i = 0; i < n; i++) {vector[i] = (double) i; }
     modify = modify_value(k, "archivo_cambiado", n , vector);
     printf("Resultado prueba 3: %d\n", modify);
-
+	free(vector);
 
 }

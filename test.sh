@@ -5,4 +5,4 @@
 ./test/test_get_value
 ./test/test_modify_value
 ./test/test_delete_key
-./test/test_exits
+./test/test_exist

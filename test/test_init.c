@@ -9,7 +9,7 @@ int print_files(char *abs_path){
     //Imprime por pantalla los archivos que hay en el directorio tuplas
     DIR *dir = opendir(abs_path);
     struct dirent *tuplas;
-    printf("Archivos en carpatea tuplas: ");
+    printf("Archivos en carpeta tuplas: ");
     while ((tuplas = readdir(dir)) != NULL){
         printf("%s  ",tuplas->d_name);
     }
@@ -25,9 +25,10 @@ int main() {
 
     int in;
 
-    /*Test 1: No hay ningun archivo en la carpeta test */
+	printf("=========Test de init=========\n");
 
-    printf("Test 1: No hay ningun archivo en la carpeta\n");
+    /*Test 1: No hay ningun archivo en la carpeta test */
+	printf("Test 1: No hay ningun archivo en la carpeta\n");
 
     //Se borran los archivos y comprueba si los a borrado
     in = init();
@@ -37,12 +38,12 @@ int main() {
 
     /*Test 2: borra  todos los arhivos de la carpeta test sabiendo que exite uno */
     printf("\n");
-    printf("Test 2: Existe algun archvio en lacarpeta\n");
+    printf("Test 2: Existe algun archivo en la carpeta\n");
     //Se crea un fichero
     int n = 32;
     double vector[n];
     for (int i = 0; i < n; i++) {vector[i] = (double)i;}
-    set_value(10, "pepito", n, vector);
+    set_value(10, "prueba", n, vector);
 
 
     print_files(abs_path);
@@ -51,6 +52,7 @@ int main() {
     in = init();
     printf("Resultado: %d\n", in);
     print_files(abs_path);
+    printf("\n");
     return 0;
 
 }
