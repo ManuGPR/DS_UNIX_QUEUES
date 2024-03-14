@@ -56,28 +56,24 @@ int main(){
 
     printf("Test de modify_value\n\n");
     //Declaración de variables
+    int  modify;
+    int n = 1;
+    double vector[32];
+    int k = 1;
 
-
+    //Se borran todos lor archivos y se crea un archivo
+    init();
+    for (int i = 0; i < n; i++) { vector[i] = (double) i; }
+    set_value(k, "archivo", n, vector);
 
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
     const char *rel_path = "./tuplas";
     char *abs_path;
     abs_path = realpath(rel_path, NULL);
 
-    //Se borran todos lor archivos y se crea un archivo
-    init();
-    int  modify;
-    int n = 1;
-    double vector[n];
-    int k = 1;
-    for (int i = 0; i < n; i++) { vector[i] = (double) i; }
-    set_value(k, "archivo", n, vector);
-
     /*Test 1: funcionamiento corecto*/
     printf("Test 1: todo correcto\n");
-    //k = 1;
 
-    //printf("En el directorio tuplas hay los siguientes archivos: ");
     print_files(abs_path);
     printf("Los datos que ha en el archivo creado: \n");
     leer_fichero(abs_path, k);
@@ -95,7 +91,6 @@ int main(){
 
     /*Test 2: no hay ningun archivo*/
     printf("\nTest 2: no exite ninguna clave\n");
-
     //Se borran los archivos
     init();
     print_files(abs_path);
@@ -103,32 +98,30 @@ int main(){
     printf("Resultado prueba 2: %d\n", modify);
 
 
-
     /*Test 3: se modifica el archivo y N = 0 */
     printf("\nTest 3: N = 0 \n");
-
     //Se borran todos lor archivos y se crea un archivo
     init();
     n = 1;
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set_value(k, "archivo", n, vector);
-
     printf("Los datos que ha en el archivo creado: \n");
     leer_fichero(abs_path, k);
-
     //Se modifica el archivo
     n = 0;
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     modify = modify_value(k, "archivo_cambiado", n , vector);
     printf("Resultado prueba 3: %d\n", modify);
+    printf("Los datos del archivo: \n");
+    leer_fichero(abs_path, k);
 
 
+    /*Test4: Modifica el archivo*/
     printf("\nTest 4: N = 32\n");
     //Se modifica el archivo
     n = 32;
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     modify = modify_value(k, "archivo_cambiado", n , vector);
-    printf("Resultado prueba 3: %d\n", modify);
-
+    printf("Resultado prueba 4: %d\n", modify);
 
 }

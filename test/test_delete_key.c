@@ -26,12 +26,14 @@ int main(){
     char *abs_path;
     abs_path = realpath(rel_path, NULL);
 
-    //Se borran todos lor archivos y se crea un archivo
-    init();
+    //Declaracion de variables
     int delete;
     int n = 1;
     double vector[n];
     int k = 1;
+
+    //Se borran todos lor archivos y se crea un archivo
+    init();
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set_value(k, "archivo", n, vector);
 
@@ -43,8 +45,9 @@ int main(){
     //Se borrael archvo
     delete = delete_key(k);
     printf("Resultado prueba 1: %d\n", delete);
-+   print_files(abs_path);
+    print_files(abs_path);
 
+    /*No exite ninguna clave*/
     printf("\nTest 2: no exite ninguna clave\n");
     //Se borran los archivos
     delete = delete_key(k);
