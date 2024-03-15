@@ -8,7 +8,7 @@ int print_files(char *abs_path) {
     //Imprime por pantalla los archivos que hay en el directorio tuplas
     DIR *dir = opendir(abs_path);
     struct dirent *tuplas;
-    printf("Archivos en carpeta tuplas: ");
+    printf("En el directorio tuplas hay los siguientes archivos:  ");
     while ((tuplas = readdir(dir)) != NULL) {
         printf("%s  ", tuplas->d_name);
     }
@@ -41,13 +41,21 @@ int leer_fichero(char *abs_path, int k){
     printf("El contenido del fichero es:\n");
     // Lee y muestra cada caracter del archivo
     char linea[100];
-    while (fgets(linea, sizeof(linea), archivo) != NULL) {
-        printf("%s", linea);
+
+    fgets(linea, sizeof(linea), archivo);
+    printf("K: %s", linea);
+    fgets(linea, sizeof(linea), archivo);
+    printf("Value1: %s", linea);
+    fgets(linea, sizeof(linea), archivo);
+    printf("N: %s", linea);
+    printf("Value2: ");
+    while(fgets(linea, sizeof(linea), archivo) !=NULL){
+        printf("%s\n", linea);
     }
+
 
     // Cierra el archivo
     fclose(archivo);
-    printf("\n");
     return 0;
 }
 
@@ -67,7 +75,7 @@ int main() {
     double *vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_1", n, vector);
-    printf("Prueba 1: %d\n", set);
+    printf("Resultado prueba 1: %d\n", set);
     print_files(abs_path);
     if (set == 0){leer_fichero(abs_path, k);}
 	free(vector);
@@ -81,7 +89,7 @@ int main() {
 
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_2", n, vector);
-    printf("Prueba 2: %d\n", set);
+    printf("Resultado prueba 2: %d\n", set);
     print_files(abs_path);
     if (set == 0){ leer_fichero(abs_path, k);}
     free(vector);
@@ -95,7 +103,7 @@ int main() {
 
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_3", n, vector);
-    printf("Prueba 3 (N=0): %d\n", set);
+    printf("Resultado prueba 3 (N=0): %d\n", set);
     print_files(abs_path);
     if (set == 0){leer_fichero(abs_path, k);}
 	free(vector);
@@ -108,7 +116,7 @@ int main() {
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_4", n, vector);
-    printf("Prueba 4 (N=2): %d\n", set);
+    printf("Resultado prueba 4 (N=2): %d\n", set);
     print_files(abs_path);
     if (set == 0){leer_fichero(abs_path, k);}
     free(vector);
@@ -121,7 +129,7 @@ int main() {
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) {vector[i] = (double) i;}
     set = set_value(k, "prueba_5", n, vector);
-    printf("Prueba 5 (N=31): %d\n", set);    
+    printf("Resultado prueba 5 (N=31): %d\n", set);
     print_files(abs_path);
     if (set == 0){ leer_fichero(abs_path, k);}
 	free(vector);
@@ -134,20 +142,20 @@ int main() {
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_6", n, vector);
-    printf("Prueba 6 (N=32): %d\n", set);
+    printf("Resultado prueba 6 (N=32): %d\n", set);
     print_files(abs_path);
     if (set == 0){leer_fichero(abs_path, k);}
 	free(vector);
 
     /*Test 7: N = 33 */
-    printf("\nTest 7: N=32\n");
+    printf("\nTest 7: N=33\n");
     print_files(abs_path);
     n = 33;
     k = 7;
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     set = set_value(k, "prueba_7", n, vector);
-    printf("Prueba 7 (N=33): %d\n", set);
+    printf("Resultado prueba 7 (N=33): %d\n", set);
     print_files(abs_path);
     if (set == 0){leer_fichero(abs_path, k);}
 	free(vector);
@@ -162,7 +170,7 @@ int main() {
     for (int i = 0; i < 50; i++){ strcat(cadena, "prueba");}
 
     set = set_value(k, cadena, n, vector);
-    printf("Prueba 8 (len(cadena) >255): %d\n", set);
+    printf("Resultado prueba 8 (len(cadena) >255): %d\n", set);
     print_files(abs_path);
     if (set == 0){ leer_fichero(abs_path, k);}
 	free(vector);

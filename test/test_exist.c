@@ -48,6 +48,9 @@ int main(){
     /*Test 2 se exite ninguna clave*/
     printf("\nTest 2: no existe ninguna clave\n");
     //Se borran los archivos
+    init();
+    print_files(abs_path);
+
     exits = exist(k);
     printf("Resultado prueba 2: %d\n", exits);
 }

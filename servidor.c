@@ -59,7 +59,7 @@ int init_server(struct Peticion * peticion) {
 			strcpy(file_name, abs_path);
 			strcat(file_name, "/");
 			strcat(file_name, tuplas->d_name);
-			
+
 			// Se borra el fichero, si hay algún error, se escribe y la respuesta devolverá -1
 			if (remove(file_name) == -1) {	
 				perror("");
@@ -346,6 +346,15 @@ int exist_server(struct Peticion * peticion) {
 
     // Se mira si existe
     r.res = access(tuple_name, F_OK);
+    if (access(tuple_name, F_OK ) == 0) {
+        r.res = 1;
+    } else {
+        if (errno == ENOENT) {
+            r.res = 0;
+        } else {
+            r.res = -1;
+        }
+    }
 
     // Se envía el mensaje
     mq_send(q_client, (char*)&r, sizeof(r), 0);

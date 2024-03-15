@@ -38,12 +38,17 @@ int leer_fichero(char *abs_path, int k){
         printf("Error al abrir el fichro");
         return -1;
     }
-
-    //printf("El contenido del fichero es:\n");
     // Lee y muestra cada caracter del archivo
     char linea[100];
-    while (fgets(linea, sizeof(linea), archivo) != NULL) {
-        printf("%s", linea);
+    fgets(linea, sizeof(linea), archivo);
+    printf("K: %s", linea);
+    fgets(linea, sizeof(linea), archivo);
+    printf("Value1: %s", linea);
+    fgets(linea, sizeof(linea), archivo);
+    printf("N: %s", linea);
+    printf("Value2: ");
+    while(fgets(linea, sizeof(linea), archivo) !=NULL){
+        printf("%s\n", linea);
     }
 
     // Cierra el archivo
@@ -51,6 +56,7 @@ int leer_fichero(char *abs_path, int k){
     printf("\n");
     return 0;
 }
+
 
 int main(){
     //Se obtine la path del diretorio tuplas donde estan almacanadas las key y se abre el directorio
@@ -123,7 +129,17 @@ int main(){
     vector = calloc(n, sizeof(double));
     for (int i = 0; i < n; i++) {vector[i] = (double) i; }
     modify = modify_value(k, "archivo_cambiado", n , vector);
-    printf("Resultado prueba 3: %d\n", modify);
+    printf("Resultado prueba 4: %d\n", modify);
 	free(vector);
+
+    /*Test 5: Modifica el archivo*/
+    printf("\nTest 5: N = 33\n");
+    //Se modifica el archivo
+    n = 33;
+    vector = calloc(n, sizeof(double));
+    for (int i = 0; i < n; i++) {vector[i] = (double) i; }
+    modify = modify_value(k, "archivo_cambiado", n , vector);
+    printf("Resultado prueba 5: %d\n", modify);
+    free(vector);
 
 }
