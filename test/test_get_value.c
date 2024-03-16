@@ -39,15 +39,35 @@ int leer_fichero(char *abs_path, int k){
     }
 
     // Lee y muestra cada caracter del archivo
-    char linea[100];
+    char linea[500];
+    /*
+    int key;
+    fscanf(tuple, "%d\n", &key)  ;
+    printf("K: %d\n", key);
+    fscanf(tuple, "%[^\n]s\n", &linea);
+    printf("Value1: %s\n", linea);
+    fscanf(tuple, "%d\n", )
+    printf("3\n");
+    for (int i = 0; i < r.N_or_exists; i++) {
+        if (fscanf(tuple, "%lf", &r.V_value2[i]) < 1) {printf("4\n");r.res = -1;}
+        if (i < r.N_or_exists -1) { fscanf(tuple, ", ");}
+    }
+    if (r.N_or_exists < 1 || r.N_or_exists > 32){
+        r.res = -1;
+    }
+
+
+    gets(linea, sizeof(linea), archivo);
+    printf("K: %s\n", linea);
+
+    fscanf()
 
     fgets(linea, sizeof(linea), archivo);
-    printf("K: %s", linea);
+    //printf("Value1: %s\n", linea);
     fgets(linea, sizeof(linea), archivo);
-    printf("Value1: %s", linea);
-    fgets(linea, sizeof(linea), archivo);
-    printf("N: %s", linea);
+    //printf("N: %s\n", linea);
     printf("Value2: ");
+     */
     while(fgets(linea, sizeof(linea), archivo) !=NULL){
         printf("%s\n", linea);
     }
@@ -113,17 +133,18 @@ int main(){
     char *abs_path;
     abs_path = realpath(rel_path, NULL);
 
+    /*Test 1: funcionamiento corecto*/
+    printf("Test 1: todo correcto\n");
+
     //Se borran todos lor archivos y se crea un archivo
     init();
     n = 2;
     k = 1;
     for (int i = 0; i < n; i++) { vector[i] = (double) i;}
 
-    get = set_value(k, "archivo", n, vector);
-    printf("Resultado prueba 1: %d\n", get);
+    set_value(k, "archivo", n, vector);
 
-    /*Test 1: funcionamiento corecto*/
-    printf("Test 1: todo correcto\n");
+
 
     print_files(abs_path);
     printf("Los datos que hay en el archivo creado: \n");
@@ -168,10 +189,18 @@ int main(){
     char cadena[300];
     n = 1;
     k = 2;
-    for (int i = 0; i < 7; i++){ strcat(cadena, "prueba");}
+    for (int i = 0; i < 50; i++){ strcat(cadena, "prueba");}
     for (int i = 0; i < n; i++) { vector[i] = (double) i; }
     escribir_fichero(abs_path, k, n, cadena, vector);
     leer_fichero(abs_path,k);
     get = get_value(k, v1, &N , v2);
     printf("Resultado prueba 4: %d\n", get);
+    printf("Los datos que se han obtenido son:\n");
+    printf("K: %i\n", k);
+    printf("V1: %s\n", v1);
+    printf("N: %i\n", N);
+    printf("V2: ");
+    for(int i = 0; i < N; i++){
+        printf("%lf\n", v2[i]);
+    }
 }
