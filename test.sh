@@ -6,7 +6,7 @@ test/test_get_value
 test/test_modify_value
 test/test_delete_key
 test/test_exist
-./cliente &
-./cliente &
-./cliente &
+test/test_concurencia &
+test/test_concurencia &
+test/test_concurencia &
 
